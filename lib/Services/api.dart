@@ -10,7 +10,7 @@ import 'package:dio/dio.dart';
 Future<Coin> fetchData() async {
   var dio = Dio();
   String apikey = '27ab17d1-215f-49e5-9ca4-afd48810c149';
-  String url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETH,LTC#';
+  String url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETHLTC#';
   var response = await dio.get(url,
       options: Options(headers: {
         'X-CMC_PRO_API_KEY': apikey

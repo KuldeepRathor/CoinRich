@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, unused_field
 
-import 'dart:convert';
-
-import 'package:coinrich/Api/api.dart';
+import 'package:coinrich/Helpers/constants.dart';
+import 'package:coinrich/Services/api.dart';
+import 'package:coinrich/model/model.dart';
+import 'package:coinrich/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/coinwidget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,12 +14,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late Future<Coin> coin;
+
   @override
   void initState() {
-    var response = fetchData();
+    coin = fetchData();
 
     super.initState();
   }
+  // String percentChange = snapshot.data.data.btc.quote.usd.percentChange24H;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class _HomeState extends State<Home> {
               )),
           centerTitle: true,
         ),
-        backgroundColor: Color(0xff363333),
+        backgroundColor: secondaryColor,
         body: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
@@ -51,9 +53,11 @@ class _HomeState extends State<Home> {
                     child: Row(
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
-                        Icon(
-                          Icons.pie_chart_outline_rounded,
-                          color: Colors.amberAccent,
+                        Image(
+                          image: AssetImage(
+                            'assets/icons/pie-chart.png',
+                          ),
+                          height: size.height * 0.03,
                         ),
                         SizedBox(
                           width: size.width * 0.02,
@@ -61,7 +65,7 @@ class _HomeState extends State<Home> {
                         Text(
                           'Show Chart',
                           style: TextStyle(
-                            color: Colors.amberAccent,
+                            color: primaryColor,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -83,7 +87,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         Text(
-                          'data',
+                          ' 1',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -98,17 +102,159 @@ class _HomeState extends State<Home> {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              FutureBuilder(
-                  future: fetchData(),
+              FutureBuilder<Coin>(
+                  future: coin,
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
-                      return CoinWidgets(size: size);
+                      return Container(
+                        height: size.height * 0.17,
+                        width: size.width * 0.9,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          snapshot.data.data.btc.name,
+                                          style: TextStyle(
+                                            color: primaryColor,
+                                            fontSize: 24,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: size.width * 0.03,
+                                        ),
+                                        arrow(),
+                                        Text(
+                                          '${snapshot.data.data.btc.quote.usd.percentChange24H.toString().substring(0, 5)}%',
+                                          style: TextStyle(
+                                            color: tertiaryColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              tertiaryColor),
+                                    ),
+                                    onPressed: () async {
+                                      // var response = await BaseClient().get('/coin');
+                                      fetchData();
+                                    },
+                                    child:
+                                        Text('${snapshot.data.data.btc.symbol}',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Price',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: size.width * 0.03,
+                                          ),
+                                          Text(
+                                            snapshot
+                                                .data.data.btc.quote.usd.price
+                                                .toString()
+                                                .substring(0, 8),
+                                            style: TextStyle(
+                                              color: tertiaryColor,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Rank',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: size.width * 0.03,
+                                          ),
+                                          Text(
+                                            " ${snapshot.data.data.btc.cmcRank}",
+
+                                            // response data.toString(),
+                                            style: TextStyle(
+                                              color: tertiaryColor,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 45,
+                                      width: 45,
+                                      decoration: BoxDecoration(
+                                        color: primaryColor,
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      child: Icon(
+                                        Icons.arrow_forward,
+                                        size: 30,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
                     } else {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
                     }
                   }),
+              SizedBox(
+                height: size.height * 0.03,
+              ),
             ],
           ),
         ),
@@ -117,21 +263,154 @@ class _HomeState extends State<Home> {
   }
 }
 
-class Coin {
-  String name;
-  String price;
-  String rank;
 
-  Coin({
-    required this.name,
-    required this.price,
-    required this.rank,
-  });
-  factory Coin.fromJson(Map<String, dynamic> json) {
-    return Coin(
-      name: json['name'],
-      price: json['price'],
-      rank: json['rank'],
-    );
-  }
-}
+// FutureBuilder<Coin>(
+//                   future: coin,
+//                   builder: (BuildContext context, AsyncSnapshot snapshot) {
+//                     if (snapshot.hasData) {
+//                       return Container(
+//                         height: size.height * 0.17,
+//                         width: size.width * 0.9,
+//                         decoration: BoxDecoration(
+//                           color: Colors.black,
+//                           borderRadius: BorderRadius.circular(10),
+//                         ),
+//                         child: Padding(
+//                           padding: const EdgeInsets.all(12.0),
+//                           child: Column(
+//                             children: [
+//                               Row(
+//                                 mainAxisAlignment:
+//                                     MainAxisAlignment.spaceBetween,
+//                                 children: [
+//                                   Container(
+//                                     child: Row(
+//                                       children: [
+//                                         Text(
+//                                           snapshot.data.data.btc.name,
+//                                           style: TextStyle(
+//                                             color: primaryColor,
+//                                             fontSize: 24,
+//                                           ),
+//                                         ),
+//                                         SizedBox(
+//                                           width: size.width * 0.03,
+//                                         ),
+//                                         arrow(),
+//                                         Text(
+//                                           '${snapshot.data.data.btc.quote.usd.percentChange24H.toString().substring(0, 5)}%',
+//                                           style: TextStyle(
+//                                             color: tertiaryColor,
+//                                             fontSize: 16,
+//                                             fontWeight: FontWeight.bold,
+//                                           ),
+//                                         ),
+//                                       ],
+//                                     ),
+//                                   ),
+//                                   TextButton(
+//                                     style: ButtonStyle(
+//                                       backgroundColor:
+//                                           MaterialStateProperty.all(
+//                                               tertiaryColor),
+//                                     ),
+//                                     onPressed: () async {
+//                                       // var response = await BaseClient().get('/coin');
+//                                       fetchData();
+//                                     },
+//                                     child:
+//                                         Text('${snapshot.data.data.btc.symbol}',
+//                                             style: TextStyle(
+//                                               color: Colors.white,
+//                                               fontSize: 16,
+//                                               fontWeight: FontWeight.bold,
+//                                             )),
+//                                   ),
+//                                 ],
+//                               ),
+//                               Padding(
+//                                 padding: const EdgeInsets.all(8.0),
+//                                 child: Row(
+//                                   mainAxisAlignment:
+//                                       MainAxisAlignment.spaceBetween,
+//                                   children: [
+//                                     Container(
+//                                       child: Row(
+//                                         children: [
+//                                           Text(
+//                                             'Price',
+//                                             style: TextStyle(
+//                                               color: Colors.white,
+//                                               fontSize: 16,
+//                                               fontWeight: FontWeight.bold,
+//                                             ),
+//                                           ),
+//                                           SizedBox(
+//                                             width: size.width * 0.03,
+//                                           ),
+//                                           Text(
+//                                             snapshot
+//                                                 .data.data.btc.quote.usd.price
+//                                                 .toString()
+//                                                 .substring(0, 8),
+//                                             style: TextStyle(
+//                                               color: tertiaryColor,
+//                                               fontSize: 16,
+//                                               fontWeight: FontWeight.bold,
+//                                             ),
+//                                           ),
+//                                         ],
+//                                       ),
+//                                     ),
+//                                     Container(
+//                                       child: Row(
+//                                         children: [
+//                                           Text(
+//                                             'Rank',
+//                                             style: TextStyle(
+//                                               color: Colors.white,
+//                                               fontSize: 16,
+//                                               fontWeight: FontWeight.bold,
+//                                             ),
+//                                           ),
+//                                           SizedBox(
+//                                             width: size.width * 0.03,
+//                                           ),
+//                                           Text(
+//                                             " ${snapshot.data.data.btc.cmcRank}",
+
+//                                             // response data.toString(),
+//                                             style: TextStyle(
+//                                               color: tertiaryColor,
+//                                               fontSize: 16,
+//                                               fontWeight: FontWeight.bold,
+//                                             ),
+//                                           ),
+//                                         ],
+//                                       ),
+//                                     ),
+//                                     Container(
+//                                       height: 45,
+//                                       width: 45,
+//                                       decoration: BoxDecoration(
+//                                         color: primaryColor,
+//                                         borderRadius: BorderRadius.circular(30),
+//                                       ),
+//                                       child: Icon(
+//                                         Icons.arrow_forward,
+//                                         size: 30,
+//                                       ),
+//                                     )
+//                                   ],
+//                                 ),
+//                               )
+//                             ],
+//                           ),
+//                         ),
+//                       );
+//                     } else {
+//                       return Center(
+//                         child: CircularProgressIndicator(),
+//                       );
+//                     }
+//                   }),

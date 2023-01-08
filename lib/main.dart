@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:coinrich/Screens/home.dart';
 import 'package:flutter/material.dart';
 
@@ -8,12 +10,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      home: Home(
-
-      ),
+      home: Home(),
     );
   }
 }

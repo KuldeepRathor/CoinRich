@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:coinrich/Api/api.dart';
+import 'package:coinrich/Services/api.dart';
 import 'package:flutter/material.dart';
+
+import '../Helpers/constants.dart';
 
 class CoinWidgets extends StatelessWidget {
   const CoinWidgets({
@@ -31,9 +33,9 @@ class CoinWidgets extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        'CoinName',
+                        'Coin',
                         style: TextStyle(
-                          color: Colors.amberAccent,
+                          color: primaryColor,
                           fontSize: 24,
                         ),
                       ),
@@ -133,7 +135,7 @@ class CoinWidgets extends StatelessWidget {
                     height: 45,
                     width: 45,
                     decoration: BoxDecoration(
-                      color: Colors.amberAccent,
+                          color: primaryColor,
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Icon(

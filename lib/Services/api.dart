@@ -1,3 +1,4 @@
+import 'package:coinrich/model/model.dart';
 import 'package:dio/dio.dart';
 
 
@@ -6,17 +7,19 @@ import 'package:dio/dio.dart';
 //   String url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETHLTC#';
 // }
 
-Future<dynamic> fetchData() async{
+Future<Coin> fetchData() async {
   var dio = Dio();
   String apikey = '27ab17d1-215f-49e5-9ca4-afd48810c149';
-  String url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETHLTC#';
-  var response = await dio.get(url, options: Options(headers: {'X-CMC_PRO_API_KEY': apikey}));
+  String url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETH,LTC#';
+  var response = await dio.get(url,
+      options: Options(headers: {
+        'X-CMC_PRO_API_KEY': apikey
+      }));
   print(response.statusCode);
   print(response.data.toString());
-
-  return response.statusCode;
+  var res = Coin.fromJson(response.data);
+  return Coin.fromJson(response.data);
 }
-
 
 
 
